@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gasolina Coruña</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              mac: {
+                bg: '#f5f5f7',
+                window: '#ffffff',
+                panel: '#f7f7f8',
+                text: '#1f1f1f',
+                muted: '#6e6e73',
+                border: '#dfe3e8',
+                accent: '#0a84ff',
+                red: '#ff5f57',
+                yellow: '#ffbd2e',
+                green: '#28c840'
+              }
+            },
+            boxShadow: {
+              mac: '0 20px 80px rgba(15, 23, 42, 0.18)',
+              soft: '0 10px 30px rgba(15, 23, 42, 0.08)'
+            }
+          }
+        }
+      };
+    </script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="min-h-screen bg-[radial-gradient(circle_at_top,_#ffffff_0%,_#f5f5f7_36%,_#edf2fa_100%)] text-slate-800 antialiased">
+    <div class="mx-auto flex min-h-screen w-full max-w-[1500px] items-center justify-center px-4 py-6">
+
+      <main class="overflow-hidden rounded-[32px] border border-white/60 bg-white/25 shadow-[0_30px_90px_rgba(15,23,42,0.12)] backdrop-blur-2xl">
+        <div class="flex min-h-[750px] bg-[linear-gradient(to_bottom,_rgba(255,255,255,0.28),_rgba(255,255,255,0.1))]">
+          <aside class="w-[250px] border-r border-white/40 bg-white/10 p-4 backdrop-blur-sm">
+            <div class="mb-6 rounded-2xl border border-white/40 bg-white/25 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+              <div class="text-[10px] uppercase tracking-[0.18em] text-slate-500">Panel</div>
+              <div class="mt-2 flex items-center justify-between">
+                <div class="text-sm font-semibold text-slate-700">A Coruña</div>
+                <div class="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.8)]"></div>
+              </div>
+            </div>
+
+            <div class="mt-8 rounded-[24px] border border-white/50 bg-white/25 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+              <div class="mb-3 text-[10px] uppercase tracking-[0.18em] text-slate-500">Resumen</div>
+              <div class="space-y-3 text-sm text-slate-600">
+                <div class="rounded-2xl border border-emerald-200/80 bg-emerald-50/70 p-2.5">
+                  <div class="text-[10px] uppercase tracking-[0.12em] text-emerald-700">Más barata</div>
+                  <div class="mt-1 flex items-center justify-between gap-2">
+                    <span class="font-medium text-slate-700">95</span>
+                    <span id="cheapest95Summary" class="font-semibold text-slate-800">--</span>
+                  </div>
+                  <div class="mt-1 flex items-center justify-between gap-2">
+                    <span class="font-medium text-slate-700">Diésel</span>
+                    <span id="cheapestDieselSummary" class="font-semibold text-slate-800">--</span>
+                  </div>
+                  <div id="cheapestAddressSummary" class="mt-2 text-[11px] leading-snug text-slate-500">--</div>
+                </div>
+
+                <div class="rounded-2xl border border-rose-200/80 bg-rose-50/70 p-2.5">
+                  <div class="text-[10px] uppercase tracking-[0.12em] text-rose-700">Más cara</div>
+                  <div class="mt-1 flex items-center justify-between gap-2">
+                    <span class="font-medium text-slate-700">95</span>
+                    <span id="expensive95Summary" class="font-semibold text-slate-800">--</span>
+                  </div>
+                  <div class="mt-1 flex items-center justify-between gap-2">
+                    <span class="font-medium text-slate-700">Diésel</span>
+                    <span id="expensiveDieselSummary" class="font-semibold text-slate-800">--</span>
+                  </div>
+                  <div id="expensiveAddressSummary" class="mt-2 text-[11px] leading-snug text-slate-500">--</div>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <div class="flex-1 p-4 md:p-6">
+            <section class="mb-6 grid gap-4 md:grid-cols-3">
+              <article class="rounded-[24px] border border-white/60 bg-white/35 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-xl">
+                <span class="mb-3 block text-[11px] font-medium uppercase tracking-[0.12em] text-slate-500">Última actualización</span>
+                <strong id="updatedAt" class="block text-[1.7rem] font-semibold tracking-[-0.06em] text-slate-900">--</strong>
+              </article>
+
+              <article class="rounded-[24px] border border-white/60 bg-white/35 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-xl">
+                <span class="mb-3 block text-[11px] font-medium uppercase tracking-[0.12em] text-slate-500">Media gasolina 95</span>
+                <strong id="average95" class="block text-[1.7rem] font-semibold tracking-[-0.06em] text-slate-900">--</strong>
+                <small id="delta95Text" class="text-sm text-slate-500">--</small>
+              </article>
+
+              <article class="rounded-[24px] border border-white/60 bg-white/35 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-xl">
+                <span class="mb-3 block text-[11px] font-medium uppercase tracking-[0.12em] text-slate-500">Media diésel</span>
+                <strong id="averageDiesel" class="block text-[1.7rem] font-semibold tracking-[-0.06em] text-slate-900">--</strong>
+                <small id="deltaDieselText" class="text-sm text-slate-500">--</small>
+              </article>
+            </section>
+
+            <section class="grid gap-6 xl:grid-cols-[2fr_0.95fr]">
+              <div class="rounded-[28px] border border-white/60 bg-white/35 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-xl">
+                <div class="mb-4 flex items-center justify-between gap-3 border-b border-white/50 pb-3">
+                  <div>
+                    <p class="text-[11px] uppercase tracking-[0.12em] text-slate-500">Listado</p>
+                    <h2 class="text-xl font-semibold tracking-[-0.04em] text-slate-800">Gasolineras</h2>
+                  </div>
+                  <label class="flex items-center gap-2 text-xs font-medium text-slate-500">
+                    <span>Localidad</span>
+                    <select id="localityFilter" class="rounded-xl border border-white/60 bg-white/60 px-2 py-1.5 text-sm text-slate-700 shadow-inner shadow-white/40 outline-none ring-0">
+                      <option value="Todas">Todas</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="max-h-[430px] overflow-y-auto rounded-[18px] border border-white/40 bg-white/20">
+                  <table class="min-w-full border-separate border-spacing-0 text-left text-sm">
+                    <thead class="sticky top-0 z-10 bg-white/70 backdrop-blur-xl">
+                      <tr>
+                        <th class="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">Estación</th>
+                        <th class="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">Localidad</th>
+                        <th class="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">Dirección</th>
+                        <th class="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">95</th>
+                        <th class="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">Diésel</th>
+                      </tr>
+                    </thead>
+                    <tbody id="cheapestTable" class="bg-white/10"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <aside class="rounded-[28px] border border-white/60 bg-white/35 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-xl">
+                <div class="mb-4 border-b border-white/60 pb-3">
+                  <p class="text-[11px] uppercase tracking-[0.12em] text-slate-500">Avisos</p>
+                  <h2 class="text-xl font-semibold tracking-[-0.04em] text-slate-800">Recordatorio diario</h2>
+                </div>
+
+                <form id="subscriptionForm" class="space-y-4">
+                  <label class="block text-sm font-medium text-slate-600">
+                    <span class="mb-1.5 block">Email</span>
+                    <input id="emailInput" type="email" placeholder="tu@email.com" class="w-full rounded-2xl border border-white/70 bg-white/60 px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-sky-200 focus:bg-white" required />
+                  </label>
+
+                  <label class="block text-sm font-medium text-slate-600">
+                    <span class="mb-1.5 block">Combustible</span>
+                    <select id="fuelSelect" class="w-full rounded-2xl border border-white/70 bg-white/60 px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-sky-200 focus:bg-white">
+                      <option value="gasolina95">Gasolina 95</option>
+                      <option value="diesel">Diésel</option>
+                    </select>
+                  </label>
+
+                  <label class="block text-sm font-medium text-slate-600">
+                    <span class="mb-1.5 block">Hora de aviso</span>
+                    <input id="alertTime" type="time" value="08:00" class="w-full rounded-2xl border border-white/70 bg-white/60 px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-sky-200 focus:bg-white" required />
+                  </label>
+
+                  <button id="refreshBtn" type="button" class="w-full rounded-2xl bg-slate-900 px-3 py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(15,23,42,0.2)] transition hover:bg-slate-800">Actualizar</button>
+                  <button type="submit" class="w-full rounded-2xl border border-white/60 bg-white/40 px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition hover:bg-white/60">Guardar alarma</button>
+                </form>
+
+                <p id="subscriptionStatus" class="mt-4 min-h-[20px] text-sm font-medium text-emerald-600"></p>
+              </aside>
+            </section>
+
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

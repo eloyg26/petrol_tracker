@@ -1,0 +1,81 @@
+body {
+  margin: 0;
+  background: #f5f5f7;
+  color: #1f1f1f;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#cheapestTable td {
+  padding: 0.8rem 0.8rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+  color: #374151;
+}
+
+#cheapestTable tr:hover {
+  background: rgba(148, 163, 184, 0.04);
+}
+
+#cheapestTable td a {
+  color: #0f172a;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+#cheapestTable td a:hover {
+  text-decoration: underline;
+}
+
+
+#subscriptionForm button {
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+#subscriptionForm button:hover {
+  transform: translateY(-1px);
+}
+
+#subscriptionForm input:focus,
+#subscriptionForm select:focus,
+#localityFilter:focus {
+  outline: none;
+  border-color: rgba(15, 23, 42, 0.2);
+}
+
+.positive {
+  color: #0f766e;
+}
+
+.negative {
+  color: #b91c1c;
+}
+
+@media (max-width: 800px) {
+  #cheapestTable td {
+    padding: 0.7rem 0.55rem;
+  }
+}
+

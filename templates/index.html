@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gasolina Coruña</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Servicio de monitorización</p>
+        <h1>Gasolina Coruña</h1>
+      </div>
+      <button id="refreshBtn" class="primary">Actualizar</button>
+    </header>
+
+    <main class="container">
+      <section class="cards">
+        <article class="card summary">
+          <span class="label">Última actualización</span>
+          <strong id="updatedAt">--</strong>
+        </article>
+        <article class="card summary">
+          <span class="label">Media gasolina 95</span>
+          <strong id="average95">--</strong>
+          <small id="delta95Text">--</small>
+        </article>
+        <article class="card summary">
+          <span class="label">Media diésel</span>
+          <strong id="averageDiesel">--</strong>
+          <small id="deltaDieselText">--</small>
+        </article>
+      </section>
+
+      <section class="layout">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Las más baratas en A Coruña</h2>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Estación</th>
+                <th>Localidad</th>
+                <th>95 E5</th>
+                <th>Diésel</th>
+              </tr>
+            </thead>
+            <tbody id="cheapestTable"></tbody>
+          </table>
+        </div>
+
+        <aside class="panel subscription">
+          <div class="panel-header">
+            <h2>Suscripción diaria</h2>
+          </div>
+          <form id="subscriptionForm">
+            <label>
+              Email
+              <input type="email" id="emailInput" placeholder="tu@email.com" required />
+            </label>
+            <label>
+              Combustible
+              <select id="fuelSelect">
+                <option value="gasolina95">Gasolina 95</option>
+                <option value="diesel">Diésel</option>
+              </select>
+            </label>
+            <label>
+              Provincia
+              <input type="text" id="provinceInput" value="A Coruña" />
+            </label>
+            <button class="primary" type="submit">Suscribirme</button>
+          </form>
+          <p id="subscriptionStatus" class="status"></p>
+        </aside>
+      </section>
+
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
