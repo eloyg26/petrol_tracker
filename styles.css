@@ -157,7 +157,47 @@ select {
 
 @media (max-width: 640px) {
   #cheapestTable {
-    min-width: 560px;
+    display: block;
+    width: 100%;
+    min-width: 0;
+    border-spacing: 0;
+  }
+
+  #cheapestTable thead {
+    display: none;
+  }
+
+  #cheapestTable tbody {
+    display: block;
+    width: 100%;
+  }
+
+  #cheapestTable tr {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.8rem;
+    padding: 0.75rem;
+    border-radius: 18px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  #cheapestTable td {
+    display: block;
+    width: 100%;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  }
+
+  #cheapestTable td:last-child {
+    border-bottom: none;
+  }
+
+  #cheapestTable td a {
+    display: inline-block;
+    max-width: 100%;
+    word-break: break-word;
   }
 
   #subscriptionForm button,
