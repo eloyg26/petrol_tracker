@@ -5,8 +5,21 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
 }
 
+html, body {
+  overflow-x: hidden;
+}
+
 * {
   box-sizing: border-box;
+}
+
+.app-shell {
+  min-width: 0;
+}
+
+.app-panel {
+  width: 100%;
+  max-width: 100%;
 }
 
 button,
@@ -33,6 +46,12 @@ select {
   padding: 0.8rem 0.8rem;
   border-bottom: 1px solid rgba(148, 163, 184, 0.18);
   color: #374151;
+  vertical-align: top;
+}
+
+#cheapestTable th {
+  padding: 0.8rem 0.8rem;
+  text-align: left;
 }
 
 #cheapestTable tr:hover {
@@ -47,6 +66,18 @@ select {
 
 #cheapestTable td a:hover {
   text-decoration: underline;
+}
+
+.summary-content {
+  display: block;
+}
+
+.summary-content.is-collapsed {
+  display: none;
+}
+
+.mobile-summary-header {
+  display: none;
 }
 
 
@@ -73,9 +104,76 @@ select {
   color: #b91c1c;
 }
 
+@media (max-width: 1023px) {
+  .mobile-summary-header {
+    display: block;
+  }
+
+  .summary-content {
+    display: none;
+  }
+
+  .summary-content.is-collapsed {
+    display: none;
+  }
+
+  .summary-content.is-open {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .summary-content {
+    display: block !important;
+  }
+}
+
 @media (max-width: 800px) {
   #cheapestTable td {
     padding: 0.7rem 0.55rem;
+  }
+
+  #cheapestTable th {
+    padding: 0.7rem 0.5rem;
+    white-space: nowrap;
+  }
+
+  #cheapestTable {
+    min-width: 620px;
+    table-layout: fixed;
+  }
+
+  #cheapestTable td:nth-child(3),
+  #cheapestTable th:nth-child(3) {
+    max-width: 180px;
+    word-break: break-word;
+    white-space: normal;
+  }
+
+  .app-panel {
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  #cheapestTable {
+    min-width: 560px;
+  }
+
+  #subscriptionForm button,
+  #mapSearchBtn {
+    width: 100%;
+  }
+
+  #localityFilter,
+  #sidebarLocalityFilter,
+  #mapZoneSelect,
+  #mapSearchInput {
+    width: 100%;
+  }
+
+  #stationMap {
+    height: 220px;
   }
 }
 
