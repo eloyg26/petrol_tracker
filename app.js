@@ -7,6 +7,7 @@ const PRICE_REFRESH_MS = 60000;
 let stationMap = null;
 let stationMarkersLayer = null;
 let latestStations = [];
+let userLocation = null;
 
 function formatEuro(value) {
   if (value === null || value === undefined || Number.isNaN(value)) return '—';
@@ -68,6 +69,46 @@ function getMapsUrl(station) {
   const address = station.Dirección || station.Direccion || station['Dirección'] || station['Direccion'] || '';
   const query = [station['Rótulo'] || 'Gasolinera', address, locality].filter(Boolean).join(' ');
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+}
+
+function getStationCoords(station) {
+  const coordinates = parseCoordinates(station);
+  if (!coordinates) return null;
+  return { lat: coordinates[0], lng: coordinates[1] };
+}
+
+function getDistanceKm(from, to) {
+  if (!from || !to) return null;
+  const earthRadiusKm = 6371;
+  const dLat = ((to.lat - from.lat) * Math.PI) / 180;
+  const dLng = ((to.lng - from.lng) * Math.PI) / 180;
+  const lat1 = (from.lat * Math.PI) / 180;
+  const lat2 = (to.lat * Math.PI) / 180;
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLng / 2) * Math.sin(dLng / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return earthRadiusKm * c;
+}
+
+function getStationDistanceKm(station) {
+  if (!userLocation) return null;
+  const stationCoords = getStationCoords(station);
+  if (!stationCoords) return null;
+  return getDistanceKm(userLocation, stationCoords);
+}
+
+function getStationRouteUrl(station) {
+  const coords = getStationCoords(station);
+  if (!coords) return getMapsUrl(station);
+  if (!userLocation) return getMapsUrl(station);
+  return `https://www.google.com/maps/dir/${userLocation.lat},${userLocation.lng}/${coords.lat},${coords.lng}`;
+}
+
+function formatDistance(distanceKm) {
+  if (distanceKm === null || distanceKm === undefined || Number.isNaN(distanceKm)) return 'Sin ubicación';
+  return `${distanceKm < 1 ? `${Math.round(distanceKm * 1000)} m` : `${distanceKm.toFixed(1)} km`}`;
 }
 
 function getPriceColor(price) {
@@ -251,17 +292,62 @@ function getCheapestStationRows(stations) {
       locality: station.Localidad || '-',
       address: station.Dirección || station.Direccion || station['Dirección'] || station['Direccion'] || 'Sin dirección',
       mapsUrl: getMapsUrl(station),
+      routeUrl: getStationRouteUrl(station),
       gasolina95: getStationFuel(station, ['Precio Gasolina 95 E5', 'Precio Gasolina 95 E10', 'Precio Gasolina 95 E25']),
       diesel: getStationFuel(station, ['Precio Gasoleo A', 'Precio Gasoleo B']),
-      favorite: isFavorite(station)
+      favorite: isFavorite(station),
+      distanceKm: getStationDistanceKm(station)
     }))
     .filter((item) => item.gasolina95 !== null || item.diesel !== null)
     .sort((a, b) => {
       if (a.favorite !== b.favorite) return Number(b.favorite) - Number(a.favorite);
       const priceA = a.gasolina95 ?? a.diesel ?? 99;
       const priceB = b.gasolina95 ?? b.diesel ?? 99;
+      if (userLocation && a.distanceKm !== null && b.distanceKm !== null) {
+        const scoreA = priceA + (a.distanceKm * 0.04);
+        const scoreB = priceB + (b.distanceKm * 0.04);
+        return scoreA - scoreB;
+      }
       return priceA - priceB;
     });
+}
+
+function renderBestStations() {
+  const container = document.getElementById('bestStationsList');
+  if (!container) return;
+
+  if (!userLocation) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const bestStations = getCheapestStationRows(latestStations).slice(0, 4);
+
+  if (!bestStations.length) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = bestStations
+    .map((station, index) => {
+      const price = station.gasolina95 ?? station.diesel ?? null;
+      const routeText = station.distanceKm === null ? 'Ruta • sin datos' : `Ruta • ${formatDistance(station.distanceKm)}`;
+      return `
+        <a href="${station.routeUrl}" target="_blank" rel="noopener noreferrer" class="block rounded-xl border border-white/60 bg-white/35 px-2 py-2 transition hover:bg-white/60">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">#${index + 1}</span>
+            <span class="text-[10px] uppercase tracking-[0.12em] text-amber-600">${station.favorite ? '★' : '•'}</span>
+          </div>
+          <div class="mt-1 font-medium text-slate-700">${station.name}</div>
+          <div class="mt-1 flex items-center justify-between gap-2 text-[10px] text-slate-500">
+            <span>${station.locality}</span>
+            <span>${price !== null ? formatEuro(price) : '—'}</span>
+          </div>
+          <div class="mt-1 text-[10px] text-sky-700">${routeText}</div>
+        </a>
+      `;
+    })
+    .join('');
 }
 
 function readHistory() {
@@ -431,7 +517,8 @@ function renderSummary(summary) {
           </div>
         </td>
         <td>${station.locality}</td>
-        <td><a href="${station.mapsUrl}" target="_blank" rel="noopener noreferrer">${station.address}</a></td>
+        <td><a href="${station.routeUrl || station.mapsUrl}" target="_blank" rel="noopener noreferrer">${station.address}</a></td>
+        <td>${userLocation && station.distanceKm !== null ? formatDistance(station.distanceKm) : '—'}</td>
         <td>${formatEuro(station.gasolina95)}</td>
         <td>${formatEuro(station.diesel)}</td>
       </tr>
@@ -471,6 +558,37 @@ function populateLocalitySelects(stations, selectedValue = 'Todas') {
   return validValue;
 }
 
+function updateBestAndSummary() {
+  renderBestStations();
+  const currentSummary = calculateSummary(latestStations, document.getElementById('localityFilter')?.value || 'Todas');
+  renderSummary(currentSummary);
+}
+
+async function requestUserLocation() {
+  if (!navigator.geolocation) {
+    alert('Tu navegador no admite geolocalización.');
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
+      if (latestStations.length) {
+        updateBestAndSummary();
+      }
+      alert('Ubicación actualizada. Ahora veremos la mejor estación más cerca de ti.');
+    },
+    () => {
+      userLocation = null;
+      renderBestStations();
+      const currentSummary = calculateSummary(latestStations, document.getElementById('localityFilter')?.value || 'Todas');
+      renderSummary(currentSummary);
+      alert('No se pudo acceder a tu ubicación. No se muestra ninguna recomendación por proximidad.');
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+}
+
 async function loadSummary() {
   try {
     const response = await fetch(API_URL, { headers: { Accept: 'application/json' } });
@@ -496,6 +614,7 @@ async function loadSummary() {
     writeHistory(history);
 
     renderSummary(summary);
+    renderBestStations();
   } catch (error) {
     console.error(error);
     const fallback = readHistory();
@@ -564,6 +683,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const mobileSummaryToggle = document.getElementById('mobileSummaryToggle');
   const summaryDrawerContent = document.getElementById('summaryDrawerContent');
   const mobileSummaryChevron = document.getElementById('mobileSummaryChevron');
+  const useMyLocationBtn = document.getElementById('useMyLocationBtn');
 
   if (mobileSummaryToggle && summaryDrawerContent) {
     mobileSummaryToggle.addEventListener('click', () => {
@@ -602,6 +722,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   document.getElementById('refreshBtn').addEventListener('click', loadSummary);
+  if (useMyLocationBtn) {
+    useMyLocationBtn.addEventListener('click', requestUserLocation);
+  }
   [localityFilter, sidebarLocalityFilter].filter(Boolean).forEach((select) => {
     select.addEventListener('change', () => updateLocalityView(select.value));
   });

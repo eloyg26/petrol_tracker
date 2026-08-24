@@ -94,6 +94,14 @@
               </div>
 
               <div class="mt-4 rounded-[24px] border border-white/50 bg-white/25 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+                <div class="mb-2 flex items-center justify-between gap-2">
+                  <div class="text-[10px] uppercase tracking-[0.18em] text-slate-500">Mejores</div>
+                  <button id="useMyLocationBtn" type="button" class="rounded-full border border-sky-200 bg-sky-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-sky-700 transition hover:bg-sky-100">Por ubicación</button>
+                </div>
+                <div id="bestStationsList" class="space-y-2 text-xs text-slate-600"></div>
+              </div>
+
+              <div class="mt-4 rounded-[24px] border border-white/50 bg-white/25 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
                 <div class="mb-2 text-[10px] uppercase tracking-[0.18em] text-slate-500">Favoritas</div>
                 <div id="favoriteStationsList" class="space-y-2 text-xs text-slate-600"></div>
               </div>
@@ -168,6 +176,7 @@
                         <th class="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">Estación</th>
                         <th class="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">Localidad</th>
                         <th class="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">Dirección</th>
+                        <th class="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">Distancia</th>
                         <th class="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">95</th>
                         <th class="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">Diésel</th>
                       </tr>
