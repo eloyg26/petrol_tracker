@@ -116,7 +116,7 @@ function getPriceColor(price) {
     return '#64748b';
   }
 
-  if (price <= 1.45) return '#22c55e';
+  if (price <= 1.45) return '#199145';
   if (price <= 1.60) return '#84cc16';
   if (price <= 1.73) return '#f59e0b';
   if (price <= 1.85) return '#f97316';
@@ -509,7 +509,7 @@ function renderSummary(summary) {
   const tbody = document.getElementById('cheapestTable');
   tbody.innerHTML = summary.top
     .map((station) => `
-      <tr class="${station.favorite ? 'bg-amber-50/60' : ''}">
+      <tr class="${station.favorite ? 'bg-gray-50' : ''}">
         <td>
           <div class="flex items-center gap-2">
             <button type="button" class="favorite-toggle ${station.favorite ? 'favorite-active' : ''}" data-key="${station.key}" aria-label="Guardar favorito">${station.favorite ? '★' : '☆'}</button>
